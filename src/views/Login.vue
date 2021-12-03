@@ -1,29 +1,24 @@
 <template>
   <div class="user">
+    dfsdf
     <input type="text" placeholder="user" v-model="account">
     <input type="text" placeholder="password" v-model="password">
     <button @click="handleLogin()">Login</button>
   </div>
 </template>
 
-<script lang="ts">
-import router from '@/router/index.ts'
+<script >
 export default {
   name: "Login.vue",
-  data():unknown{
+  data() {
     return {
-      account:'',
-      password:''
+      account: '',
+      password: ''
     }
   },
-  methods:{
-    handleLogin() :void{
-      sessionStorage.removeItem('user')
-      // console.log(this.account)
-      // console.log(this.password)
-      if(sessionStorage.getItem('user')>100){
-        router.addRoute({path:'/manage',component:()=>import('@/views/Manage.vue'),meta:{title:'管理'}})
-      }
+  methods: {
+    handleLogin() {
+      sessionStorage.setItem('user', this.account)
       this.$router.push('/home');
     }
   }

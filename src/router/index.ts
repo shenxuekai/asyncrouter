@@ -1,22 +1,22 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import Home from '../views/Home.vue'
-
-const routes: Array<RouteRecordRaw> = [
+const baseRoutes: Array<RouteRecordRaw> = [
   {
     path: '/',
     redirect:'/login',
+    component: ()=>import('../views/Login.vue'),
   },
   {
     path: '/login',
     name: 'Login',
-
     component: ()=>import('../views/Login.vue'),
-
+    meta:{
+      title:'登录'
+    }
   },
   {
     path: '/home',
     name: 'Home',
-    component: Home,
+    component: ()=>import('../views/Home.vue'),
     meta:{
       title:'首页'
     }
@@ -24,28 +24,38 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/about',
     name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
     meta:{
       title:'关于'
     }
-  },
-  // {
-  //   path:'/manage',
-  //   component:()=>import('../views/Manage.vue')
-  // }
+  }
 ]
 
-const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
-  routes
-})
-router.beforeEach((to,from,next)=>{
+const creatRouter =()=>{
+  return createRouter({
+    history: createWebHistory(process.env.BASE_URL),
+    routes:baseRoutes
+  })
+}
 
+const router = creatRouter();
+router.beforeEach((to,from,next)=>{
   if(to.path==='/login'){
-    sessionStorage.removeItem('user')
+    sessionStorage.setItem('user','');
+
+  }else{
+    if(from.path==='/login'){
+      const user:string|null=sessionStorage.getItem('user');
+      if(user&&user.length>3){
+        console.log(router.getRoutes())
+        for(const item of asyncRoutes){
+          router.addRoute(item)
+        }
+      router.options.routes = router.getRoutes()
+      }
+    }
   }
+  next();
 })
+export const asyncRoutes = [{path: '/manage', component: () => import('@/views/Manage.vue'), meta: {title: '管理'}}];
 export default router
