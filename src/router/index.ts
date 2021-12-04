@@ -1,36 +1,6 @@
 import {createRouter, createWebHistory, RouteRecordRaw} from 'vue-router'
-
-const baseRoutes: Array<RouteRecordRaw> = [//公共路由
-  {
-    path: '/',
-    redirect:'/login',
-    component: ()=>import('../views/Login.vue'),
-  },
-  {
-    path: '/login',
-    name: 'Login',
-    component: ()=>import('../views/Login.vue'),
-    meta:{
-      title:'登录'
-    }
-  },
-  {
-    path: '/home',
-    name: 'Home',
-    component: ()=>import('../views/Home.vue'),
-    meta:{
-      title:'首页'
-    }
-  },
-  {
-    path: '/about',
-    name: 'About',
-    component: () => import( '../views/About.vue'),
-    meta:{
-      title:'关于'
-    }
-  }
-]
+import baseRoutes from "@/router/baseRoutes";
+import {asyncRoutes} from "@/router/asyncRoutes";
 import store from "@/store";
 const creatRouter =()=>{
   return createRouter({
@@ -39,12 +9,17 @@ const creatRouter =()=>{
   })
 }
 let  router = creatRouter();
+
+//重置路由：清空user 创建新的router store清空routes记录
 export  function resetRouter():void {
   sessionStorage.setItem('user','')
   router = creatRouter()
   store.commit('set_allRoutes',[])
 }
-
+//流程：
+// 1.如果去login或者‘’：重置后直接跳（）    //重置路由函数：清空user 创建新的router store清空routes记录
+// 2.如果去其他的正常路由 ：判断路由是不是已经构造过了，够早过了直接跳，没构造过下一步
+// 3.构造路由：判断一下用户名长度，>3按照管理员添加路由，小于3就不管，默认路由
 router.beforeEach(
     (to,from,next)=>{
   if(to.path =='/login'||to.path==''){
@@ -67,5 +42,4 @@ router.beforeEach(
     next({...to, replace: true});
   }
 });
-export const asyncRoutes = [{path: '/manage', component: () => import('@/views/Manage.vue'), meta: {title: '管理'}}];
 export default router

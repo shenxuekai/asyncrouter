@@ -7,35 +7,7 @@
 <script>
 
 export default {
-  name: "NavBar",
-  props:{
-    menu:{
-      type:Array,
-      default(){
-        return []
-      }
-    }
-  },
-
-  data(){
-    return {
-      test:[
-        {
-          path:'/about',
-          name:'About',
-          meta:{
-            title:'关于'
-          }
-        },{
-          path:'/manage',
-          name:'Manage',
-          meta:{
-            title:'管理'
-          }
-        }
-      ]
-    }
-  }
+  name: "NavBar"
 }
 </script>
 

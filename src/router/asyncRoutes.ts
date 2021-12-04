@@ -1,0 +1,1 @@
+export const asyncRoutes = [{path: '/manage', component: () => import('@/views/Manage.vue'), meta: {title: '管理'}}];
