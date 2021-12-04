@@ -8,6 +8,8 @@
 </template>
 
 <script >
+import router from "../router";
+
 export default {
   name: "Login.vue",
   data() {
@@ -18,8 +20,12 @@ export default {
   },
   methods: {
     handleLogin() {
-      sessionStorage.setItem('user', this.account)
-      this.$router.push('/home');
+      if(this.account.trim()){
+        sessionStorage.setItem('user', this.account)
+        this.$router.push('/home');
+      }else {
+        alert("cuowu")
+      }
     }
   }
 }

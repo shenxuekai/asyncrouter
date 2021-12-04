@@ -1,7 +1,16 @@
 import {createStore} from 'vuex'
 const  state = {
-    allRoutes:[]
+    allRoutes:[],
+    name:'shenxk'
+};
+const mutations = {
+    set_allRoutes(state:any,payload:any){
+        state.allRoutes = payload
+    }
 }
-export default new createStore({
-    state
-})
+const options = {
+    state,
+    mutations
+}
+const  store = createStore(options)
+export default store

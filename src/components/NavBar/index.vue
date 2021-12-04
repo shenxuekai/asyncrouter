@@ -1,11 +1,10 @@
 <template>
   <div>
-    <router-link v-for="item in routeList" :to=item.path :key="item" class="link">{{item.meta?item.meta.title:''}}</router-link>
+    <router-link v-for="item in this.$store.state.allRoutes" :to=item.path :key="item" class="link">{{item.meta?item.meta.title:''}}</router-link>
   </div>
 </template>
 
 <script>
-import router from "@/router";
 
 export default {
   name: "NavBar",
@@ -17,11 +16,7 @@ export default {
       }
     }
   },
-  computed:{
-    routeList(){
-      return this.$router.options.routes;
-    }
-  },
+
   data(){
     return {
       test:[

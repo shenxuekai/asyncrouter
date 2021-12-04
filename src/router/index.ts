@@ -1,5 +1,6 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-const baseRoutes: Array<RouteRecordRaw> = [
+import {createRouter, createWebHistory, RouteRecordRaw} from 'vue-router'
+
+const baseRoutes: Array<RouteRecordRaw> = [//公共路由
   {
     path: '/',
     redirect:'/login',
@@ -24,38 +25,47 @@ const baseRoutes: Array<RouteRecordRaw> = [
   {
     path: '/about',
     name: 'About',
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
+    component: () => import( '../views/About.vue'),
     meta:{
       title:'关于'
     }
   }
 ]
-
+import store from "@/store";
 const creatRouter =()=>{
   return createRouter({
     history: createWebHistory(process.env.BASE_URL),
     routes:baseRoutes
   })
 }
+let  router = creatRouter();
+export  function resetRouter():void {
+  sessionStorage.setItem('user','')
+  router = creatRouter()
+  store.commit('set_allRoutes',[])
+}
 
-const router = creatRouter();
-router.beforeEach((to,from,next)=>{
-  if(to.path==='/login'){
-    sessionStorage.setItem('user','');
-
-  }else{
-    if(from.path==='/login'){
-      const user:string|null=sessionStorage.getItem('user');
-      if(user&&user.length>3){
-        console.log(router.getRoutes())
-        for(const item of asyncRoutes){
+router.beforeEach(
+    (to,from,next)=>{
+  if(to.path =='/login'||to.path==''){
+    resetRouter()
+    next()
+    return
+  }
+  if(store.state.allRoutes&&store.state.allRoutes.length>0){
+    next()
+  }else {
+    const user: string | null = sessionStorage.getItem('user');
+    if(user){
+      if (user.length > 3) {
+        for (const item of asyncRoutes) {
           router.addRoute(item)
         }
-      router.options.routes = router.getRoutes()
       }
     }
+    store.commit('set_allRoutes', router.getRoutes());
+    next({...to, replace: true});
   }
-  next();
-})
+});
 export const asyncRoutes = [{path: '/manage', component: () => import('@/views/Manage.vue'), meta: {title: '管理'}}];
 export default router
