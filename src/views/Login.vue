@@ -8,8 +8,6 @@
 </template>
 
 <script >
-import router from "../router";
-
 export default {
   name: "Login.vue",
   data() {
